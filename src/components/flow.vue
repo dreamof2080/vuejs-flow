@@ -26,23 +26,38 @@
 
 
 <style>
-  .node circle {
+  .flow .flowChart{
+    text-align: center;
+  }
+  .flow .flowChart .node circle {
     fill: #999;
   }
 
-  .node text {
-    font: 10px sans-serif;
-  }
-
-  .node--internal circle {
+  .flow .flowChart .node--internal circle {
     fill: #555;
   }
 
-  .node--internal text {
-    text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+  .flow .flowChart .node--end circle {
+    fill: #555;
   }
 
-  .link {
+  .flow .flowChart .node--noData circle {
+    fill: #289f2c;
+  }
+
+  .flow .flowChart .node--doing circle {
+    fill: #211a89;
+  }
+
+  .flow .flowChart .node text {
+    font: 0.7em sans-serif;
+  }
+
+  /*.flow .flowChart .node--internal text {*/
+    /*text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;*/
+  /*}*/
+
+  .flow .flowChart .link {
     fill: none;
     stroke: #555;
     stroke-opacity: 0.4;

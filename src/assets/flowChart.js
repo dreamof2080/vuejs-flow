@@ -47,7 +47,7 @@ export default class FlowChart {
       .attr("class", "link")
       .attr("d", d3.linkHorizontal()
         .x(function (d) {
-          return d.y;
+          return d.y+30;
         })
         .y(function (d) {
           return d.x;
@@ -58,40 +58,44 @@ export default class FlowChart {
       .enter()
       .append("g")
       .attr("class", function (d) {
-        return "node" + (d.children ? " node--internal" : " node--leaf");
+        if (d.data.type>0) {
+          if (d.data.type>1){
+            return "node node--noData";
+          }  else {
+            return "node node--doing";
+          }
+        }else{
+          return "node node--end";
+        }
+        // return "node" + (d.children ? " node--internal" : " node--leaf");
       })
       .attr("transform", function (d) {
-        return "translate(" + d.y + "," + d.x + ")";
+        return "translate(" + (d.y+30) + "," + d.x + ")";
       });
 
     node.append("circle")
-      .attr("r", 5);
+      .attr("r", 20);
 
     node.append("text")
-      .attr("dy", 3)
-      .attr("x", function (d) {
-        return d.children ? -8 : 8;
-      })
-      .style("text-anchor", function (d) {
-        return d.children ? "end" : "start";
-      })
+      .attr("dy", 35)
+      .attr("x", -20)
+      .style("text-anchor", "start")
       .text(function (d) {
         return d.id.substring(d.id.lastIndexOf(".") + 1);
       });
   }
 
-
+//type解释： 0:已完成，1:进行中，2:未涉及
   data() {
     return [
-      {name: "Eve", parent: ""},
-      {name: "Cain", parent: "Eve"},
-      {name: "Seth", parent: "Eve"},
-      {name: "Enos", parent: "Seth"},
-      {name: "Noam", parent: "Seth"},
-      {name: "Abel", parent: "Eve"},
-      {name: "Awan", parent: "Eve"},
-      {name: "Enoch", parent: "Awan"},
-      {name: "Azura", parent: "Eve"}
+      {id:1,name: "采购申请", parent: "", type:0},
+      {id:2,name: "采购评审", parent: "采购申请", type:0},
+      {id:3,name: "采购评审调整", parent: "采购评审", type:2},
+      {id:4,name: "银行预付款", parent: "采购评审", type:0},
+      {id:5,name: "采购到货", parent: "采购评审", type:0},
+      {id:6,name: "物资入库", parent: "采购到货", type:1},
+      {id:7,name: "采购报销付款", parent: "物资入库", type:2},
+      {id:8,name: "物资出库", parent: "物资入库", type:2}
     ];
   }
 }
