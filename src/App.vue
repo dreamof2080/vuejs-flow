@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Flow/>
-    <DetailTable/>
+    <Flow @workflowChange="handleWorkflow"/>
+    <DetailTable :workflowData = "workflowData"/>
   </div>
 </template>
 
@@ -11,9 +11,19 @@ import DetailTable from './components/detailTable'
 
 export default {
   name: 'app',
+  data(){
+    return {
+      workflowData:null
+    }
+  },
   components: {
     Flow,
     DetailTable
+  },
+  methods:{
+    handleWorkflow(data){
+      this.workflowData = data;
+    }
   }
 }
 </script>

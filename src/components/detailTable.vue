@@ -5,18 +5,26 @@
           :data="tableData"
           style="width: 100%">
         <el-table-column
-            prop="date"
-            label="日期"
-            width="180">
+            label="流程单号">
+          <template slot-scope="scope">
+            <a :href="scope.row.href" target="_blank">{{scope.row.flowNo}}</a>
+          </template>
         </el-table-column>
         <el-table-column
-            prop="name"
-            label="姓名"
-            width="180">
+            prop="flowTitle"
+            label="流程标题">
         </el-table-column>
         <el-table-column
-            prop="address"
-            label="地址">
+            prop="reqDate"
+            label="申请日期">
+        </el-table-column>
+        <el-table-column
+            prop="reqMan"
+            label="申请人">
+        </el-table-column>
+        <el-table-column
+            prop="currentNode"
+            label="当前节点">
         </el-table-column>
       </el-table>
     </template>
@@ -25,25 +33,53 @@
 
 <script>
   export default {
+    props: ['workflowData'],
     data() {
       return {
         tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          flowNo: 'SP20180819001',
+          href: 'www.baidu.com',
+          flowTitle: '测试1',
+          reqDate: '2016-05-02',
+          reqMan: '王小虎',
+          currentNode: '部门经理审批'
         }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
+          flowNo: 'SP20180819002',
+          href: 'www.baidu.com',
+          flowTitle: '测试2',
+          reqDate: '2016-05-04',
+          reqMan: '王小虎',
+          currentNode: '部门经理审批'
         }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
+          flowNo: 'SP20180819003',
+          href: 'www.baidu.com',
+          flowTitle: '测试3',
+          reqDate: '2016-05-01',
+          reqMan: '王小虎',
+          currentNode: '部门经理审批'
         }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
+          flowNo: 'SP20180819004',
+          href: 'www.baidu.com',
+          flowTitle: '测试4',
+          reqDate: '2016-05-03',
+          reqMan: '王小虎',
+          currentNode: '部门经理审批'
         }]
+      }
+    },
+    watch: {
+      workflowData: function (newData, oldData) {
+        this.tableData = [];
+        if (newData.type < 2) {
+          this.tableData.push({
+            flowNo: newData.workflowid,
+            href: 'www.baidu.com',
+            flowTitle: '测试',
+            reqDate: '2016-05-02',
+            reqMan: '王小虎',
+            currentNode: '部门经理审批'
+          });
+        }
       }
     }
   }
@@ -51,5 +87,8 @@
 
 
 <style scoped>
-
+  .detailTable a {
+    text-decoration: none;
+    color: #709cb2;
+  }
 </style>
