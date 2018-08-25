@@ -87,6 +87,17 @@
 
 
 <style scoped>
+  .detailTable{
+    width:90%;
+    margin:20px auto;
+    background-color: #eee;
+    border-radius: 5px;
+  }
+  .detailTable>div{
+    border-radius: 5px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    background-color: #eee;
+  }
   .detailTable a {
     text-decoration: none;
     color: #709cb2;

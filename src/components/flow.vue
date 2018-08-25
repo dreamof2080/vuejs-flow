@@ -128,6 +128,14 @@
 
 
 <style>
+  .flow{
+    width:90%;
+    margin:0 auto;
+    border-radius: 5px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+  }
+
   .flow ul {
     margin: 0;
     padding: 0;
@@ -141,8 +149,9 @@
   }
 
   .flow li i {
-    font-size: 1em;
+    font-size: 0.9em;
     font-style: normal;
+    color:#828990;
   }
 
   .flow li i:before {
@@ -158,7 +167,7 @@
   }
 
   .flow li:first-child > i:before {
-    background-color: #86755a;
+    background-color: #ccab76;
   }
 
   .flow li:last-child > i:before {
@@ -177,12 +186,8 @@
     fill: #999;
   }
 
-  .flow .flowChart .node--internal circle {
-    fill: #555;
-  }
-
   .flow .flowChart .node--end circle {
-    fill: #86755a;
+    fill: #ccab76;
   }
 
   .flow .flowChart .node--noData circle {
@@ -214,7 +219,8 @@
   }
 
   .flow .flowChart .node text {
-    font: 0.7em sans-serif;
+    font: 0.7em red sans-serif;
+    fill: #868788;
   }
 
   /*.flow .flowChart .node--internal text {*/
