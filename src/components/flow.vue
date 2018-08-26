@@ -1,45 +1,91 @@
 <template>
-  <div class="flow">
-    <el-container>
-      <el-header>
-        <ul>
-          <li><i>已完成</i></li>
-          <li><i>进行中</i></li>
-          <li><i>无关联</i></li>
-        </ul>
-      </el-header>
-      <el-main>
-        <div class="flowChart" id="flowChart"></div>
-      </el-main>
-    </el-container>
+  <div class="flowMain">
+    <div class="flow">
+      <el-container>
+        <el-header>
+          <ul>
+            <li><i>已完成</i></li>
+            <li><i>进行中</i></li>
+            <li><i>无关联</i></li>
+          </ul>
+        </el-header>
+        <el-main>
+          <div class="flowChart" id="flowChart"></div>
+        </el-main>
+      </el-container>
+      <div>
+        <i class="el-icon-arrow-up" v-on:click="handleShowDataPanel"></i>
+      </div>
 
-    <transition name="el-zoom-in-top">
-      <el-card shadow="always" class="cardInfo" v-show="cardShow" :body-style="{ padding: '10px' }" v-bind:style="{top:getCardTop,left:getCardLeft}">
-        <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">开始时间</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.startDate}}</div></el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">结束时间</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.endDate}}</div></el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">耗时</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.totalHours}}H</div></el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">参与员工数</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.employees}}</div></el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">参与部门数</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.departments}}</div></el-col>
-        </el-row>
-      </el-card>
+      <transition name="el-zoom-in-top">
+        <el-card shadow="always" class="cardInfo" v-show="cardInfo.show" :body-style="{ padding: '10px' }" v-bind:style="{top:getCardTop,left:getCardLeft}">
+          <el-row>
+            <el-col :span="8"><div class="grid-content bg-purple">开始时间</div></el-col>
+            <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.startDate}}</div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8"><div class="grid-content bg-purple">结束时间</div></el-col>
+            <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.endDate}}</div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8"><div class="grid-content bg-purple">耗时</div></el-col>
+            <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.totalHours}}H</div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8"><div class="grid-content bg-purple">参与员工数</div></el-col>
+            <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.employees}}</div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8"><div class="grid-content bg-purple">参与部门数</div></el-col>
+            <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.departments}}</div></el-col>
+          </el-row>
+        </el-card>
+      </transition>
+    </div>
+
+    <transition name="el-zoom-in-bottom">
+      <div class="dataPanel" v-show="dataPanel.show">
+        <el-container>
+          <el-header>统计信息</el-header>
+          <el-container>
+            <el-aside width="350px">
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">开始时间</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">2018-01-01 08:00:00</div></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">结束时间</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">2018-01-01 08:00:00</div></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">总耗时</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">48H</div></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">站点总数</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">10</div></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">平均耗时</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">4.8H</div></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">员工总数</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">30</div></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="8"><div class="grid-content bg-purple">部门总数</div></el-col>
+                <el-col :span="16"><div class="grid-content bg-purple">6</div></el-col>
+              </el-row>
+            </el-aside>
+            <el-main>Main</el-main>
+          </el-container>
+        </el-container>
+      </div>
     </transition>
 
-    
   </div>
+
 </template>
 
 <script>
@@ -59,8 +105,8 @@
           {workflowid: 7, name: "采购报销付款", parent: "物资入库", type: 2},
           {workflowid: 8, name: "物资出库", parent: "物资入库", type: 2}
         ],
-        cardShow:false,
         cardInfo:{
+          show:false,
           top:0,
           left:0,
           startDate:null,
@@ -68,6 +114,9 @@
           totalHours:null,
           employees:null,
           departments:null,
+        },
+        dataPanel:{
+          show:false,
         }
       }
     },
@@ -165,8 +214,8 @@
       handleShowCard(d){
         this.cardInfo.top = d3.event.pageY;
         this.cardInfo.left = d3.event.pageX;
-        this.cardShow = !this.cardShow;
-        if (this.cardShow) {
+        this.cardInfo.show = !this.cardInfo.show;
+        if (this.cardInfo.show) {
           if (d.data.type>1){
             this.cardInfo.startDate = "无";
             this.cardInfo.endDate = "无";
@@ -182,6 +231,9 @@
           }
         }
       },
+      handleShowDataPanel(){
+        this.dataPanel.show = true;
+      },
     },
     computed:{
       getCardTop(){
@@ -189,7 +241,7 @@
       },
       getCardLeft(){
         let left = this.screenWidth * 0.95;
-        if (this.cardInfo.left+240+40>left){
+        if (this.cardInfo.left+240+50>left){
           return this.cardInfo.left - 240 - 40 + "px";
         }
         return this.cardInfo.left + 40 + "px";
@@ -200,8 +252,14 @@
 
 
 <style>
+  .flowMain{
+    position: relative;
+  }
+
   .flow{
     width:90%;
+    height: 70vh;
+    overflow-y: auto;
     margin:0 auto;
     border-radius: 5px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
@@ -325,5 +383,18 @@
   
   .flow .cardInfo .el-row:last-child {
     margin-bottom: 0;
+  }
+
+  .dataPanel{
+    background-color: #6e6e6e;
+    position: absolute;
+    top:0;
+    left:5%;
+    height: 70vh;
+    width:90%;
+    margin:0 auto;
+    border-radius: 5px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+    z-index: 200;
   }
 </style>

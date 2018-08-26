@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Flow @workflowChange="handleWorkflow"/>
+    <Flow :screenWidth="screenWidth" @workflowChange="handleWorkflow"/>
     <DetailTable :workflowData = "workflowData"/>
   </div>
 </template>
@@ -13,6 +13,7 @@ export default {
   name: 'app',
   data(){
     return {
+      screenWidth:document.body.clientWidth,
       workflowData:null
     }
   },
@@ -23,6 +24,11 @@ export default {
   methods:{
     handleWorkflow(data){
       this.workflowData = data;
+    }
+  },
+  mounted () {
+    window.onresize = () => {
+      this.screenWidth = document.body.clientWidth;
     }
   }
 }
