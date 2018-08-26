@@ -12,30 +12,33 @@
         <div class="flowChart" id="flowChart"></div>
       </el-main>
     </el-container>
+
     <transition name="el-zoom-in-top">
-      <el-card shadow="always" class="cardInfo" v-show="cardShow" :body-style="{ padding: '10px' }">
+      <el-card shadow="always" class="cardInfo" v-show="cardShow" :body-style="{ padding: '10px' }" v-bind:style="{top:getCardTop,left:getCardLeft}">
         <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">到达时间</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">2018-01-01 08:00:00</div></el-col>
+          <el-col :span="8"><div class="grid-content bg-purple">开始时间</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.startDate}}</div></el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="8"><div class="grid-content bg-purple">离开时间</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">2018-01-02 10:00:00</div></el-col>
+          <el-col :span="8"><div class="grid-content bg-purple">结束时间</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.endDate}}</div></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8"><div class="grid-content bg-purple">耗时</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">25H</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.totalHours}}H</div></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8"><div class="grid-content bg-purple">参与员工数</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">16</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.employees}}</div></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8"><div class="grid-content bg-purple">参与部门数</div></el-col>
-          <el-col :span="16"><div class="grid-content bg-purple">5</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">{{cardInfo.departments}}</div></el-col>
         </el-row>
       </el-card>
     </transition>
+
+    
   </div>
 </template>
 
@@ -43,6 +46,7 @@
   import * as d3 from 'd3'
 
   export default {
+    props: ['screenWidth'],
     data() {
       return {
         details: [
@@ -55,7 +59,16 @@
           {workflowid: 7, name: "采购报销付款", parent: "物资入库", type: 2},
           {workflowid: 8, name: "物资出库", parent: "物资入库", type: 2}
         ],
-        cardShow:false
+        cardShow:false,
+        cardInfo:{
+          top:0,
+          left:0,
+          startDate:null,
+          endDate:null,
+          totalHours:null,
+          employees:null,
+          departments:null,
+        }
       }
     },
     mounted() {
@@ -134,8 +147,8 @@
             return "translate(" + (d.y + 30) + "," + d.x + ")";
           })
           .on("click", this.handleState)
-          .on("mouseover",this.handleShowInfo)
-          .on("mouseout",this.handleShowInfo);
+          .on("mouseover",this.handleShowCard)
+          .on("mouseout",this.handleShowCard);
         node.append("circle")
           .attr("r", 20);
         node.append("text")
@@ -149,11 +162,37 @@
       handleState(d) {
         this.$emit('workflowChange', d.data);
       },
-      handleShowInfo(d){
+      handleShowCard(d){
+        this.cardInfo.top = d3.event.pageY;
+        this.cardInfo.left = d3.event.pageX;
         this.cardShow = !this.cardShow;
         if (this.cardShow) {
-
+          if (d.data.type>1){
+            this.cardInfo.startDate = "无";
+            this.cardInfo.endDate = "无";
+            this.cardInfo.totalHours = "0";
+            this.cardInfo.employees = "0";
+            this.cardInfo.departments = "0";
+          }else{
+            this.cardInfo.startDate = "2018-10-01 08:00:00";
+            this.cardInfo.endDate = "2018-10-02 08:00:00";
+            this.cardInfo.totalHours = "24";
+            this.cardInfo.employees = "10";
+            this.cardInfo.departments = "2";
+          }
         }
+      },
+    },
+    computed:{
+      getCardTop(){
+        return this.cardInfo.top + 20 + "px";
+      },
+      getCardLeft(){
+        let left = this.screenWidth * 0.95;
+        if (this.cardInfo.left+240+40>left){
+          return this.cardInfo.left - 240 - 40 + "px";
+        }
+        return this.cardInfo.left + 40 + "px";
       }
     }
   }
@@ -274,16 +313,16 @@
     width:240px;
     height:140px;
     position: absolute;
-    top:300px;
-    left:300px;
     font: 0.7em sans-serif;
     background-color:#efefef;
     color:#b57474;
+    z-index: 10;
   }
 
   .flow .cardInfo .el-row {
     margin-bottom: 10px;
   }
+  
   .flow .cardInfo .el-row:last-child {
     margin-bottom: 0;
   }
