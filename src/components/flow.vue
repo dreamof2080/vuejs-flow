@@ -12,6 +12,30 @@
         <div class="flowChart" id="flowChart"></div>
       </el-main>
     </el-container>
+    <transition name="el-zoom-in-top">
+      <el-card shadow="always" class="cardInfo" v-show="cardShow" :body-style="{ padding: '10px' }">
+        <el-row :gutter="20">
+          <el-col :span="8"><div class="grid-content bg-purple">到达时间</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">2018-01-01 08:00:00</div></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="8"><div class="grid-content bg-purple">离开时间</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">2018-01-02 10:00:00</div></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="8"><div class="grid-content bg-purple">耗时</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">25H</div></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="8"><div class="grid-content bg-purple">参与员工数</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">16</div></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="8"><div class="grid-content bg-purple">参与部门数</div></el-col>
+          <el-col :span="16"><div class="grid-content bg-purple">5</div></el-col>
+        </el-row>
+      </el-card>
+    </transition>
   </div>
 </template>
 
@@ -30,7 +54,8 @@
           {workflowid: 6, name: "物资入库", parent: "采购到货", type: 1},
           {workflowid: 7, name: "采购报销付款", parent: "物资入库", type: 2},
           {workflowid: 8, name: "物资出库", parent: "物资入库", type: 2}
-        ]
+        ],
+        cardShow:false
       }
     },
     mounted() {
@@ -108,7 +133,9 @@
           .attr("transform", function (d) {
             return "translate(" + (d.y + 30) + "," + d.x + ")";
           })
-          .on("click", this.handleState);
+          .on("click", this.handleState)
+          .on("mouseover",this.handleShowInfo)
+          .on("mouseout",this.handleShowInfo);
         node.append("circle")
           .attr("r", 20);
         node.append("text")
@@ -121,6 +148,12 @@
       },
       handleState(d) {
         this.$emit('workflowChange', d.data);
+      },
+      handleShowInfo(d){
+        this.cardShow = !this.cardShow;
+        if (this.cardShow) {
+
+        }
       }
     }
   }
@@ -203,23 +236,26 @@
   @keyframes bounce {
     0% {
       stroke: #d2d391;
+      stroke-width: 0;
       fill: #c55a19;
-      transform: scale(0.8);
+      transform: scale(0.6);
     }
     50% {
-      stroke: #d2d391;
+      stroke: #faffaf;
+      stroke-width: 0.2em;
       fill: #ff4a3b;
       transform: scale(1.2);
     }
     to {
       stroke: #d2d391;
+      stroke-width: 0;
       fill: #c55a19;
-      transform: scale(0.8);
+      transform: scale(0.6);
     }
   }
 
   .flow .flowChart .node text {
-    font: 0.7em red sans-serif;
+    font: 0.7em sans-serif;
     fill: #868788;
   }
 
@@ -229,8 +265,26 @@
 
   .flow .flowChart .link {
     fill: none;
-    stroke: #836077;
-    stroke-opacity: 0.4;
-    stroke-width: 1.5px;
+    stroke: #d8e6d6;
+    stroke-opacity: 0.8;
+    stroke-width: 0.4em;
+  }
+
+  .flow .cardInfo{
+    width:240px;
+    height:140px;
+    position: absolute;
+    top:300px;
+    left:300px;
+    font: 0.7em sans-serif;
+    background-color:#efefef;
+    color:#b57474;
+  }
+
+  .flow .cardInfo .el-row {
+    margin-bottom: 10px;
+  }
+  .flow .cardInfo .el-row:last-child {
+    margin-bottom: 0;
   }
 </style>
