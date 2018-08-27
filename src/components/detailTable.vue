@@ -74,7 +74,7 @@
           this.tableData.push({
             flowNo: newData.workflowid,
             href: 'www.baidu.com',
-            flowTitle: '测试',
+            flowTitle: '测试'+new Date().getTime(),
             reqDate: '2016-05-02',
             reqMan: '王小虎',
             currentNode: '部门经理审批'
