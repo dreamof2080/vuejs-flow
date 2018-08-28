@@ -160,8 +160,6 @@
 </template>
 
 <script>
-  import * as d3 from 'd3'
-
   export default {
     props: ['screenWidth'],
     data() {
@@ -216,38 +214,31 @@
       }
     },
     mounted() {
-      this.render()
+      this.render();
+      // this.axios.get('/ServiceAction/com.eweaver.workflow.workflow.servlet.WorkflowRelateAction?action=flowdetail').then(response => {
+      //   this.details = response.data;
+      //   this.render();
+      // }).catch(function (err) {
+      //   console.log(err)
+      // })
     },
     methods: {
       render() {
-        this.constructor('#flowChart');
-        this.flowChart();
+        this.flowChart("#flowChart");
         this.dataChart("#timeChart", this.timeChartData);
         this.dataChart("#employeeChart", this.employeeChartData);
         this.dataChart("#departmentChart", this.departmentChartData);
       },
-      constructor(selector) {
-        this.config = {
-          width: 960,
-          height: 500
-        };
-        const {
-          width,
-          height
-        } = this.config;
+      //轨道图
+      flowChart(selector) {
+        const d3 = this.$d3;
+        const width = 960,height = 500;
         //创建svg
         this.svg = d3.select(selector).append('svg')
           .attr('width', width)
           .attr('height', height);
         this.g = this.svg.append("g")
           .attr("transform", "translate(40,0)");
-      },
-      //轨道图
-      flowChart() {
-        const {
-          width,
-          height
-        } = this.config;
         let tree = d3.tree().size([height, width - 160]);
         let stratify = d3.stratify().id(function (d) {
           return d.name;
@@ -302,6 +293,7 @@
 
       //统计分析饼图：时间纬度、员工纬度、部门纬度饼图
       dataChart(selector, data) {
+        const d3 = this.$d3;
         const color = d3.scaleOrdinal([
           '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
           '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',

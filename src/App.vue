@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Flow from './components/flow.vue'
+import Flow from './components/flow'
 import DetailTable from './components/detailTable'
 
 export default {
