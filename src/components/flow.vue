@@ -2,7 +2,7 @@
   <div class="flowMain">
     <div class="flow">
       <el-container>
-        <el-header height="40px">
+        <el-header height="30px">
           <ul>
             <li><i>已完成</i></li>
             <li><i>进行中</i></li>
@@ -21,43 +21,43 @@
         <el-card shadow="always" class="cardInfo" v-show="cardInfo.show" :body-style="{ padding: '10px' }"
                  v-bind:style="{top:getCardTop,left:getCardLeft}">
           <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
               <div class="grid-content bg-purple">开始时间</div>
             </el-col>
-            <el-col :span="16">
-              <div class="grid-content bg-purple">{{cardInfo.startDate}}</div>
+            <el-col :span="14">
+              <div class="grid-content bg-purple">{{cardInfo.startDate?cardInfo.startDate:'--'}}</div>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
-              <div class="grid-content bg-purple">结束时间</div>
+            <el-col :span="10">
+              <div class="grid-content bg-purple">{{cardInfo.type==1?"最新处理时间":"结束时间"}}</div>
             </el-col>
-            <el-col :span="16">
-              <div class="grid-content bg-purple">{{cardInfo.endDate}}</div>
+            <el-col :span="14">
+              <div class="grid-content bg-purple">{{cardInfo.endDate?cardInfo.endDate:'--'}}</div>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
               <div class="grid-content bg-purple">耗时</div>
             </el-col>
-            <el-col :span="16">
-              <div class="grid-content bg-purple">{{cardInfo.totalHours}}H</div>
+            <el-col :span="14">
+              <div class="grid-content bg-purple">{{cardInfo.totalHours>0?cardInfo.totalHours+'&nbsp;小时':'--'}}</div>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
               <div class="grid-content bg-purple">参与员工数</div>
             </el-col>
-            <el-col :span="16">
-              <div class="grid-content bg-purple">{{cardInfo.employees}}</div>
+            <el-col :span="14">
+              <div class="grid-content bg-purple">{{cardInfo.employees>0?cardInfo.employees:'--'}}</div>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
               <div class="grid-content bg-purple">参与部门数</div>
             </el-col>
-            <el-col :span="16">
-              <div class="grid-content bg-purple">{{cardInfo.departments}}</div>
+            <el-col :span="14">
+              <div class="grid-content bg-purple">{{cardInfo.departments>0?cardInfo.departments:'--'}}</div>
             </el-col>
           </el-row>
         </el-card>
@@ -76,7 +76,7 @@
             </div>
           </el-header>
           <el-container>
-            <el-aside width="300px">
+            <el-aside width="280px">
               <div class="asideTitle">
                 概览
               </div>
@@ -85,7 +85,7 @@
                   <div class="grid-content bg-purple">开始时间</div>
                 </el-col>
                 <el-col :span="16">
-                  <div class="grid-content bg-purple">2018-01-01 08:00:00</div>
+                  <div class="grid-content bg-purple">{{dataPanel.begin}}</div>
                 </el-col>
               </el-row>
               <el-row>
@@ -93,7 +93,7 @@
                   <div class="grid-content bg-purple">结束时间</div>
                 </el-col>
                 <el-col :span="16">
-                  <div class="grid-content bg-purple">2018-01-01 08:00:00</div>
+                  <div class="grid-content bg-purple">{{dataPanel.end}}</div>
                 </el-col>
               </el-row>
               <el-row>
@@ -101,7 +101,7 @@
                   <div class="grid-content bg-purple">总耗时</div>
                 </el-col>
                 <el-col :span="16">
-                  <div class="grid-content bg-purple">48H</div>
+                  <div class="grid-content bg-purple">{{dataPanel.hours}}&nbsp;H</div>
                 </el-col>
               </el-row>
               <el-row>
@@ -109,7 +109,7 @@
                   <div class="grid-content bg-purple">站点总数</div>
                 </el-col>
                 <el-col :span="16">
-                  <div class="grid-content bg-purple">10</div>
+                  <div class="grid-content bg-purple">{{dataPanel.totalSite}}</div>
                 </el-col>
               </el-row>
               <el-row>
@@ -117,23 +117,7 @@
                   <div class="grid-content bg-purple">平均耗时</div>
                 </el-col>
                 <el-col :span="16">
-                  <div class="grid-content bg-purple">4.8H</div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="grid-content bg-purple">员工总数</div>
-                </el-col>
-                <el-col :span="16">
-                  <div class="grid-content bg-purple">30</div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
-                  <div class="grid-content bg-purple">部门总数</div>
-                </el-col>
-                <el-col :span="16">
-                  <div class="grid-content bg-purple">6</div>
+                  <div class="grid-content bg-purple">{{dataPanel.avgHours}}&nbsp;H</div>
                 </el-col>
               </el-row>
             </el-aside>
@@ -161,21 +145,42 @@
 
 <script>
   export default {
-    props: ['screenWidth'],
+    props: ['screenWidth', 'workflowid', 'requestid'],
     data() {
       return {
         details: [
-          {workflowid: 1, name: "采购申请", parent: "", type: 0},
-          {workflowid: 2, name: "采购评审", parent: "采购申请", type: 0},
-          {workflowid: 3, name: "采购评审调整", parent: "采购评审", type: 2},
-          {workflowid: 4, name: "银行预付款", parent: "采购评审", type: 0},
-          {workflowid: 5, name: "采购到货", parent: "采购评审", type: 0},
-          {workflowid: 6, name: "物资入库", parent: "采购到货", type: 1},
-          {workflowid: 7, name: "采购报销付款", parent: "物资入库", type: 2},
-          {workflowid: 8, name: "物资出库", parent: "物资入库", type: 2}
+          {
+            workflowid: 1,
+            name: "公司使用(固定资产及低值易耗品)采购申请",
+            parent: "",
+            type: 0,
+            requestinfo: ['1', '2'],
+            analysisData: {
+              begin: "2018-01-01 01:01:01",
+              end: "2018-01-01 01:01:01",
+              hours: 10,
+              userTotal: 4,
+              orgTotal: 2,
+              reqDetails: [
+                {
+                  requestid: "",
+                  title: "",
+                  reqDate: "",
+                  endDate: "",
+                  reqMan: "",
+                  node: "",
+                  nodeids: "",
+                  hours:0,
+                  userTotal:0,
+                  orgTotal:0,
+                }
+              ],
+            }
+          }
         ],
         cardInfo: {
           show: false,
+          type: 0,
           top: 0,
           left: 0,
           startDate: null,
@@ -186,53 +191,26 @@
         },
         dataPanel: {
           show: false,
+          begin: "",
+          end: "",
+          hours: 0,
+          totalSite: 0,
+          avgHours: 0,
         },
-        timeChartData: [
-          {workflowid:1,name:"采购申请",type:0,value:2},
-          {workflowid:2,name:"采购评审",type:0,value:4},
-          {workflowid:3,name:"采购评审调整",type:2,value:1},
-          {workflowid:4,name:"银行预付款",type:0,value:9},
-          {workflowid:5,name:"采购到货",type:0,value:2},
-          {workflowid:6,name:"物资入库",type:1,value:7}
-        ],
-        employeeChartData: [
-          {workflowid:1,name:"采购申请",type:0,value:10},
-          {workflowid:2,name:"采购评审",type:0,value:14},
-          {workflowid:3,name:"采购评审调整",type:2,value:6},
-          {workflowid:4,name:"银行预付款",type:0,value:8},
-          {workflowid:5,name:"采购到货",type:0,value:11},
-          {workflowid:6,name:"物资入库",type:1,value:7}
-        ],
-        departmentChartData: [
-          {workflowid:1,name:"采购申请",type:0,value:2},
-          {workflowid:2,name:"采购评审",type:0,value:4},
-          {workflowid:3,name:"采购评审调整",type:2,value:1},
-          {workflowid:4,name:"银行预付款",type:0,value:3},
-          {workflowid:5,name:"采购到货",type:0,value:2},
-          {workflowid:6,name:"物资入库",type:1,value:5}
-        ],
+        timeChartData: [],
+        employeeChartData: [],
+        departmentChartData: [],
+        aliveSite:0,
       }
-    },
-    mounted() {
-      this.render();
-      // this.axios.get('/ServiceAction/com.eweaver.workflow.workflow.servlet.WorkflowRelateAction?action=flowdetail').then(response => {
-      //   this.details = response.data;
-      //   this.render();
-      // }).catch(function (err) {
-      //   console.log(err)
-      // })
     },
     methods: {
       render() {
         this.flowChart("#flowChart");
-        this.dataChart("#timeChart", this.timeChartData);
-        this.dataChart("#employeeChart", this.employeeChartData);
-        this.dataChart("#departmentChart", this.departmentChartData);
       },
       //轨道图
       flowChart(selector) {
         const d3 = this.$d3;
-        const width = 960,height = 500;
+        const width = 960, height = 500;
         //创建svg
         this.svg = d3.select(selector).append('svg')
           .attr('width', width)
@@ -240,12 +218,12 @@
         this.g = this.svg.append("g")
           .attr("transform", "translate(40,0)");
         let tree = d3.tree().size([height, width - 160]);
-        let stratify = d3.stratify().id(function (d) {
-          return d.name;
-        }).parentId(function (d) {
+        let stratify = d3.stratify().id(d => {
+          return d.workflowid;
+        }).parentId(d => {
           return d.parent;
         });
-        let root = stratify(this.details).sort(function (a, b) {
+        let root = stratify(this.details).sort((a, b) => {
           return (a.height - b.height) || a.id.localeCompare(b.id);
         });
         this.g.selectAll(".link")
@@ -253,17 +231,17 @@
           .enter().append("path")
           .attr("class", "link")
           .attr("d", d3.linkHorizontal()
-            .x(function (d) {
+            .x(d => {
               return d.y + 30;
             })
-            .y(function (d) {
+            .y(d => {
               return d.x;
             }));
         let node = this.g.selectAll(".node")
           .data(root.descendants())
           .enter()
           .append("g")
-          .attr("class", function (d) {
+          .attr("class", d => {
             if (d.data.type > 0) {
               if (d.data.type > 1) {
                 return "node node--noData";
@@ -274,20 +252,34 @@
               return "node node--end";
             }
           })
-          .attr("transform", function (d) {
+          .attr("transform", d => {
             return "translate(" + (d.y + 30) + "," + d.x + ")";
           })
-          .on("click", this.handleState)
+          .on("click", this.handleTable)
           .on("mouseover", this.handleShowCard)
           .on("mouseout", this.handleShowCard);
         node.append("circle")
           .attr("r", 20);
         node.append("text")
           .attr("dy", 35)
-          .attr("x", -20)
+          .attr("x", d => {
+            if (d.data.name && d.data.name.length > 4 && d.data.parent !== "") {
+              return -20 - (d.data.name.length - 4) * 5;
+            } else {
+              return -20;
+            }
+          })
           .style("text-anchor", "start")
-          .text(function (d) {
-            return d.id.substring(d.id.lastIndexOf(".") + 1);
+          .text(d => {
+            if (d.data.name && d.data.name.length > 10) {
+              if (d.data.parent === "") {
+                return d.data.name.substring(0, 10) + "...";
+              } else {
+                return d.data.name.substring(0, 15) + "...";
+              }
+            } else {
+              return d.data.name;
+            }
           });
       },
 
@@ -304,7 +296,7 @@
         const height = 400;
         const outerRadius = height / 3 - 30,
           innerRadius = outerRadius / 4;
-        let pie = d3.pie().sort(null).value(function (d) {
+        let pie = d3.pie().sort(null).value(d => {
           return d.value;
         });
         let arc = d3.arc()
@@ -328,11 +320,11 @@
           .data(pie(data))
           .enter().append("g");
         subg.append("path")
-          .attr("fill",function (d) {
+          .attr("fill", d => {
             return color(d.data.value);
           })
-          .style("cursor","pointer")
-          .each(function (d) {
+          .style("cursor", "pointer")
+          .each(d => {
             d.outerRadius = outerRadius - 20;
           })
           .attr("d", arc)
@@ -354,12 +346,16 @@
               };
             });
           })
-          .on("click",this.handleState);
+          .on("click", this.handleTable);
 
         subg.append("text")
-          .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+          .attr("transform", d => {
+            return "translate(" + arc.centroid(d) + ")";
+          })
           .attr("dy", "0.35em")
-          .text(function(d) { return d.data.value; });
+          .text(d => {
+            return d.data.value;
+          });
 
         //文字标签
         let lines = svg.append('g').attr('class', 'lines');
@@ -368,21 +364,21 @@
           .data(pie(data))
           .enter()
           .append('text')
-          .attr('fill', function(d) {
+          .attr('fill', d => {
             return color(d.data.value);
           })
-          .text(function(d) {
+          .text(d => {
             return d.data.name;
           })
-          .style('text-anchor', function(d) {
-            return (d.startAngle + (d.endAngle - d.startAngle)/2) <Math.PI ? 'start' : 'end';
+          .style('text-anchor', d => {
+            return (d.startAngle + (d.endAngle - d.startAngle) / 2) < Math.PI ? 'start' : 'end';
           })
-          .style("font-size","0.7em")
-          .attr('transform', function(d) {
+          .style("font-size", "0.7em")
+          .attr('transform', d => {
             // 找出外弧形的中心点
             let pos = outerArc.centroid(d);
             // 改变文字标识的x坐标
-            pos[0] = outerRadius * ((d.startAngle + (d.endAngle - d.startAngle)/2)<Math.PI ? 1.1 : -1.1);
+            pos[0] = outerRadius * ((d.startAngle + (d.endAngle - d.startAngle) / 2) < Math.PI ? 1.1 : -1.1);
             return 'translate(' + pos + ')';
           })
           .style('opacity', 1);
@@ -391,41 +387,116 @@
           .data(pie(data))
           .enter()
           .append('polyline')
-          .attr('class','chartLine')
-          .attr('points', function(d) {
+          .attr('class', 'chartLine')
+          .attr('points', d => {
             let pos = outerArc.centroid(d);
-            pos[0] = outerRadius * ((d.startAngle + (d.endAngle - d.startAngle)/2)<Math.PI ? 1.1 : -1.1);
+            pos[0] = outerRadius * ((d.startAngle + (d.endAngle - d.startAngle) / 2) < Math.PI ? 1.1 : -1.1);
             return [oArc.centroid(d), outerArc.centroid(d), pos];
           })
           .style('opacity', 0.5);
       },
-      handleState(d) {
+      handleTable(d) {
         this.$emit('workflowChange', d.data);
       },
       handleShowCard(d) {
+        const d3 = this.$d3;
         this.cardInfo.top = d3.event.pageY;
         this.cardInfo.left = d3.event.pageX;
         this.cardInfo.show = !this.cardInfo.show;
+        this.cardInfo.type = d.data.type;
         if (this.cardInfo.show) {
-          if (d.data.type > 1) {
-            this.cardInfo.startDate = "无";
-            this.cardInfo.endDate = "无";
+          if (d.data.type > 1) {//无数据
+            this.cardInfo.startDate = "";
+            this.cardInfo.endDate = "";
             this.cardInfo.totalHours = "0";
             this.cardInfo.employees = "0";
             this.cardInfo.departments = "0";
-          } else {
-            this.cardInfo.startDate = "2018-10-01 08:00:00";
-            this.cardInfo.endDate = "2018-10-02 08:00:00";
-            this.cardInfo.totalHours = "24";
-            this.cardInfo.employees = "10";
-            this.cardInfo.departments = "2";
+          } else {//进行中和已完成
+            const index = this.details.indexOf(d.data);
+            if (this.details[index].analysisData) {
+              this.cardInfo.startDate = this.details[index].analysisData.begin;
+              this.cardInfo.endDate = this.details[index].analysisData.end;
+              this.cardInfo.totalHours = this.details[index].analysisData.hours;
+              this.cardInfo.employees = this.details[index].analysisData.userTotal;
+              this.cardInfo.departments = this.details[index].analysisData.orgTotal;
+            } else {
+              let params = new URLSearchParams();
+              params.append('reqids', JSON.stringify(d.data.requestinfo));
+              this.getRequestAnalysis(params, index);
+            }
           }
         }
       },
+      getRequestAnalysis(params, index) {
+        this.axios.post('/ServiceAction/com.eweaver.workflow.workflow.servlet.WorkflowRelateAction?action=requestanalysis', params,
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}}).then(response => {
+          this.details[index].analysisData = response.data;
+          this.cardInfo.startDate = response.data.begin;
+          this.cardInfo.endDate = response.data.end;
+          this.cardInfo.totalHours = response.data.hours;
+          this.cardInfo.employees = response.data.userTotal;
+          this.cardInfo.departments = response.data.orgTotal;
+          this.computeDataPanel(this.details[index], index);
+        });
+      },
       handleShowDataPanel() {
         this.dataPanel.show = !this.dataPanel.show;
+        if (this.dataPanel.show && this.dataPanel.totalSite === 0) {
+          this.details.forEach((data, index) => {
+            if (data.type < 2) {
+              if (!data.analysisData) {
+                let params = new URLSearchParams();
+                params.append('reqids', JSON.stringify(data.requestinfo));
+                this.getRequestAnalysis(params,index);
+              } else {
+                this.computeDataPanel(data, index);
+              }
+            }
+          });
+        }
       },
-
+      computeDataPanel(data, index) {
+        this.dataPanel.totalSite++;
+        //左侧概览计算
+        let reg = new RegExp('-', 'g');
+        if (index === 0) {
+          this.dataPanel.begin = data.analysisData.begin;
+          this.dataPanel.end = data.analysisData.end;
+        }
+        if (Date.parse(this.dataPanel.end.replace(reg, '/')) < Date.parse(data.analysisData.end.replace(reg, '/'))) {
+          this.dataPanel.end = data.analysisData.end;
+        }
+        const hours = Math.round((Date.parse(this.dataPanel.end.replace(reg, '/')) - Date.parse(this.dataPanel.begin.replace(reg, '/'))) / (1000 * 60 * 60) * 100) / 100.00;
+        this.dataPanel.hours = hours;
+        this.dataPanel.avgHours = Math.round(hours / this.dataPanel.totalSite * 100) / 100.00;
+        //饼图计算
+        this.timeChartData.push({
+          workflowid:data.workflowid,
+          name:data.name,
+          type:data.type,
+          analysisData:data.analysisData,
+          value:data.analysisData.hours,
+        });
+        this.employeeChartData.push({
+          workflowid:data.workflowid,
+          name:data.name,
+          type:data.type,
+          analysisData:data.analysisData,
+          value:data.analysisData.userTotal,
+        });
+        this.departmentChartData.push({
+          workflowid:data.workflowid,
+          name:data.name,
+          type:data.type,
+          analysisData:data.analysisData,
+          value:data.analysisData.orgTotal,
+        });
+        if (this.dataPanel.totalSite===this.aliveSite){
+          this.dataChart("#timeChart", this.timeChartData);
+          this.dataChart("#employeeChart", this.employeeChartData);
+          this.dataChart("#departmentChart", this.departmentChartData);
+        }
+      },
     },
     computed: {
       getCardTop() {
@@ -438,6 +509,25 @@
         }
         return this.cardInfo.left + 40 + "px";
       }
+    },
+    watch: {
+      workflowid(){
+        let url = "/ServiceAction/com.eweaver.workflow.workflow.servlet.WorkflowRelateAction?action=showflowrelate&workflowid="
+          + this.workflowid + "&requestid=" + this.requestid;
+        //数据模拟
+        url = "/api/flow/detail";
+        this.axios.get(url).then(response => {
+          this.details = response.data;
+          this.flowChart("#flowChart");
+          let i=0;
+          for (let data of this.details){
+            if (data.type<2) {
+              i++;
+            }
+          }
+          this.aliveSite = i;
+        })
+      },
     }
   }
 </script>
@@ -586,7 +676,7 @@
     color: #3b9c81;
     font-weight: 600;
     position: absolute;
-    left:40%;
+    left: 40%;
     bottom: 0;
     animation: pullupicon 3s infinite;
   }
@@ -623,16 +713,16 @@
     display: flex;
     flex-direction: column;
     /*justify-content: center;*/
-    margin: 0 20px 30px 30px;
+    margin: 0 10px 30px 10px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
   }
 
-  .dataPanel .asideTitle{
+  .dataPanel .asideTitle {
     text-align: center;
-    margin:50px 0 20px 0;
-    font-size:1.2em;
-    color:#776565;
+    margin-top: 20px;
+    font-size: 1em;
+    color: #776565;
   }
 
   .dataPanel .el-main {
@@ -641,7 +731,7 @@
     flex-direction: column;
     justify-content: center;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-    margin: 0 20px 30px 0;
+    margin: 0 10px 30px 0;
     border-radius: 5px;
   }
 
@@ -650,15 +740,15 @@
     top: 0;
     left: 47%;
     cursor: pointer;
-    width:100px;
-    height:50px;
+    width: 100px;
+    height: 50px;
   }
 
   .dataPanel .pullDown > i {
     color: #3b9c81;
     font-weight: 600;
     position: absolute;
-    left:40%;
+    left: 40%;
     top: 0;
     animation: pulldownicon 3s infinite;
   }
@@ -674,15 +764,15 @@
   }
 
   .dataPanel .dataTitle {
-    margin-top: 50px;
+    margin-top: 30px;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: #776565;
   }
 
   .dataPanel .el-row {
     padding: 10px;
-    margin: 10px;
+    margin: 10px 10px 5px 10px;
     font-size: 0.9em;
     color: #776565;
     border-bottom: 1px dotted #f3f2f2;
@@ -703,19 +793,19 @@
   .dataPanel .dataChart > div > div {
     text-align: center;
     color: #776565;
-    font-size: 1.2em;
+    font-size: 1em;
   }
 
-  .dataPanel .chartLine{
+  .dataPanel .chartLine {
     fill: none;
     stroke: #6b6b6b;
     stroke-width: 1px;
     stroke-dasharray: 2px;
   }
 
-  .dataPanel .slices text{
+  .dataPanel .slices text {
     font-size: 0.6em;
     text-anchor: middle;
-    fill:#f7f7f7;
+    fill: #f7f7f7;
   }
 </style>

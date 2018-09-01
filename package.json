@@ -19,6 +19,7 @@
     "@vue/cli-plugin-babel": "^3.0.0",
     "@vue/cli-plugin-eslint": "^3.0.0",
     "@vue/cli-service": "^3.0.0",
+    "mockjs": "^1.0.1-beta3",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
