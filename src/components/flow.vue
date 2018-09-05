@@ -515,7 +515,7 @@
         let url = "/ServiceAction/com.eweaver.workflow.workflow.servlet.WorkflowRelateAction?action=showflowrelate&workflowid="
           + this.workflowid + "&requestid=" + this.requestid;
         //数据模拟
-        url = "/api/flow/detail";
+        // url = "/api/flow/detail";
         this.axios.get(url).then(response => {
           this.details = response.data;
           this.flowChart("#flowChart");

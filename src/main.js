@@ -7,6 +7,7 @@ import VueAxios from 'vue-axios'
 import * as d3 from 'd3'
 import store from './assets/store'
 import '@/mock'
+import 'url-search-params-polyfill';
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
