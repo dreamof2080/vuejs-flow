@@ -218,6 +218,7 @@
         this.g = this.svg.append("g")
           .attr("transform", "translate(40,0)");
         let tree = d3.tree().size([height, width - 160]);
+        //组装数据成簇数据格式
         let stratify = d3.stratify().id(d => {
           return d.workflowid;
         }).parentId(d => {
@@ -226,6 +227,7 @@
         let root = stratify(this.details).sort((a, b) => {
           return (a.height - b.height) || a.id.localeCompare(b.id);
         });
+        //绘制线条
         this.g.selectAll(".link")
           .data(tree(root).links())
           .enter().append("path")
@@ -237,6 +239,7 @@
             .y(d => {
               return d.x;
             }));
+        //绘制节点
         let node = this.g.selectAll(".node")
           .data(root.descendants())
           .enter()
@@ -515,7 +518,7 @@
         let url = "/ServiceAction/com.eweaver.workflow.workflow.servlet.WorkflowRelateAction?action=showflowrelate&workflowid="
           + this.workflowid + "&requestid=" + this.requestid;
         //数据模拟
-        // url = "/api/flow/detail";
+        url = "/api/flow/detail";
         this.axios.get(url).then(response => {
           this.details = response.data;
           this.flowChart("#flowChart");
